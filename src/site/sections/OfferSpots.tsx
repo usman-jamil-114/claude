@@ -18,14 +18,6 @@ export function OfferSpots() {
         <Reveal>
           <div className="relative overflow-hidden rounded-[2rem] border border-primary/30 bg-gradient-featured p-5 shadow-glow md:p-12 lg:p-16">
             <div className="absolute inset-0 bg-grid opacity-60" />
-            <img
-              src="/images/percent-green.webp"
-              alt=""
-              width={640}
-              height={640}
-              loading="lazy"
-              className="pointer-events-none absolute -top-10 -right-10 w-48 animate-float opacity-30 md:w-80 md:opacity-60"
-            />
 
             <div className="relative grid items-center gap-12 lg:grid-cols-[1.1fr_1fr]">
               <div className="min-w-0">

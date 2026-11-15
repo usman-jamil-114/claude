@@ -1,42 +1,29 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
 import { CheckCircle2, Clock, Mail, MessageSquareText, Send, Sparkles } from "lucide-react";
-import { useEffect, useState, type FormEvent } from "react";
-import { OFFER, PLAN_GROUPS, SITE } from "../config";
+import { useState, type FormEvent } from "react";
+import { OFFER, SITE } from "../config";
 import { cn } from "../lib/cn";
 import { track } from "../lib/track";
-import { DEFAULT_WA_MESSAGE, openWhatsApp, whatsappLink } from "../lib/whatsapp";
+import { DEFAULT_WA_MESSAGE, openWhatsApp } from "../lib/whatsapp";
 import { buttonVariants } from "../components/Button";
 import { WhatsAppIcon } from "../components/Icons";
 import { Reveal } from "../components/Reveal";
 import { Eyebrow } from "../components/SectionHeading";
 
 const SERVICES = ["Website Development", "Google Ads", "Both (Website + Google Ads)", "Not sure yet"];
+const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL?.trim();
 
-type Form = { name: string; email: string; phone: string; service: string; plan: string; message: string };
-const EMPTY: Form = { name: "", email: "", phone: "", service: SERVICES[0]!, plan: "", message: "" };
-
-export function buildContactMessage(f: Form): string {
-  return [
-    `Hi ${SITE.name}! I'd like to claim the ${OFFER.discountPercent}% launch discount.`,
-    "",
-    `Name: ${f.name}`,
-    `Email: ${f.email}`,
-    f.phone ? `Phone: ${f.phone}` : null,
-    `Service: ${f.service}`,
-    f.plan ? `Plan: ${f.plan}` : null,
-    "",
-    f.message,
-  ]
-    .filter((l) => l !== null)
-    .join("\n");
-}
+type Form = { name: string; email: string; phone: string; service: string; message: string };
+type FormField = keyof Form;
+const EMPTY: Form = { name: "", email: "", phone: "", service: SERVICES[0]!, message: "" };
 
 function validate(f: Form): Partial<Record<keyof Form, string>> {
   const e: Partial<Record<keyof Form, string>> = {};
   if (f.name.trim().length < 2) e.name = "Please enter your name";
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) e.email = "Please enter a valid email";
-  if (f.phone && !/^[+\d][\d\s-]{6,}$/.test(f.phone.trim())) e.phone = "Please enter a valid phone number";
+  const phone = f.phone.trim().replace(/[\s-]/g, "");
+  if (phone && !/^(?:03\d{9}|\+?92\d{10})$/.test(phone)) e.phone = "Please enter a valid Pakistani mobile number";
   if (f.message.trim().length < 10) e.message = "Tell us a little more (at least 10 characters)";
   return e;
 }
@@ -47,31 +34,70 @@ const inputClass =
 export function ContactPage() {
   const [form, setForm] = useState<Form>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof Form, string>>>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof Form, boolean>>>({});
   const [sent, setSent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  useEffect(() => {
-    const plan = new URLSearchParams(window.location.search).get("plan");
-    if (plan) setForm((f) => ({ ...f, plan }));
-  }, []);
+  const set = (k: FormField) => (e: { target: { value: string } }) => {
+    const value = e.target.value;
+    const next = { ...form, [k]: value };
+    setForm(next);
+    setSubmitError("");
+    if (touched[k]) setErrors((current) => ({ ...current, [k]: validate(next)[k] }));
+  };
 
-  const set = (k: keyof Form) => (e: { target: { value: string } }) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const blur = (k: FormField) => () => {
+    setTouched((current) => ({ ...current, [k]: true }));
+    setErrors((current) => ({ ...current, [k]: validate(form)[k] }));
+  };
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const errs = validate(form);
     setErrors(errs);
+    setTouched({ name: true, email: true, phone: true, message: true });
     if (Object.keys(errs).length) return;
-    openWhatsApp(buildContactMessage(form), "contact_form");
-    track("generate_lead", { method: "contact_form", service: form.service });
-    setSent(true);
+    if (!GOOGLE_SHEETS_URL) {
+      setSubmitError("The contact form is not connected yet. Please contact us by WhatsApp or email for now.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError("");
+    try {
+      const response = await fetch(GOOGLE_SHEETS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ ...form, submittedAt: new Date().toISOString() }),
+      });
+      if (response.type !== "opaque" && !response.ok) {
+        throw new Error(`Contact submission failed with status ${response.status}`);
+      }
+      track("generate_lead", { method: "google_sheets", service: form.service });
+      setSent(true);
+    } catch (error) {
+      console.error("Could not submit the contact form to Google Sheets.", error);
+      setSubmitError("We couldn't send your message. Please try again or contact us by WhatsApp or email.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const field = (k: keyof Form) => (errors[k] ? <p className="mt-1.5 text-xs font-medium text-promo">{errors[k]}</p> : null);
+  const fieldClass = (k: FormField) =>
+    cn(inputClass, errors[k] && "border-red-500 focus:border-red-500 focus:ring-red-500/30");
+  const field = (k: FormField) =>
+    errors[k] ? (
+      <p id={`${k}-error`} className="mt-1.5 text-xs font-medium text-red-500">
+        {errors[k]}
+      </p>
+    ) : null;
 
   return (
     <section className="relative isolate overflow-hidden py-16 md:py-24">
       <div className="absolute inset-0 -z-10 bg-gradient-hero" />
-      <div className="container-site grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+      <div className="container-site grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
         <Reveal>
           <Eyebrow>Contact us</Eyebrow>
           <h1 className="mt-6 text-4xl leading-tight font-black text-foreground md:text-6xl">
@@ -110,7 +136,7 @@ export function ContactPage() {
             <p className="font-display font-bold text-foreground">What happens next?</p>
             <ol className="mt-4 space-y-3 text-sm text-muted-foreground">
               {[
-                { icon: MessageSquareText, t: "Your message opens in WhatsApp — just press send." },
+                { icon: MessageSquareText, t: "Your details are sent through our contact form." },
                 { icon: Clock, t: "We reply and set up a free consultation at a time that suits you." },
                 { icon: Sparkles, t: `You get a clear plan and price with ${OFFER.discountPercent}% off.` },
               ].map((s) => (
@@ -133,70 +159,54 @@ export function ContactPage() {
                   className="py-12 text-center"
                 >
                   <CheckCircle2 className="mx-auto size-16 text-primary" />
-                  <h2 className="mt-6 text-2xl font-extrabold text-foreground">Almost done!</h2>
+                  <h2 className="mt-6 text-2xl font-extrabold text-foreground">Message submitted</h2>
                   <p className="mx-auto mt-3 max-w-sm text-muted-foreground">
-                    WhatsApp has opened with your details. Just press <strong className="text-foreground">send</strong>{" "}
-                    and we'll get back to you.
+                    Thanks for reaching out. We’ll get back to you using the contact details you provided.
                   </p>
-                  <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                    <a
-                      href={whatsappLink(buildContactMessage(form))}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={buttonVariants({ variant: "whatsapp" })}
-                    >
-                      <WhatsAppIcon /> Open WhatsApp again
-                    </a>
-                    <button type="button" onClick={() => { setSent(false); setForm(EMPTY); }} className={buttonVariants({ variant: "outline" })}>
-                      Send another message
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSent(false);
+                      setForm(EMPTY);
+                      setErrors({});
+                      setTouched({});
+                    }}
+                    className={cn(buttonVariants({ variant: "outline" }), "mt-8")}
+                  >
+                    Send another message
+                  </button>
                 </motion.div>
               ) : (
                 <motion.form key="form" onSubmit={onSubmit} noValidate className="space-y-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <div>
-                      <label htmlFor="name" className="mb-2 block text-sm font-semibold text-foreground">Name *</label>
-                      <input id="name" className={inputClass} placeholder="Your name" value={form.name} onChange={set("name")} autoComplete="name" />
-                      {field("name")}
-                    </div>
-                    <div>
-                      <label htmlFor="email" className="mb-2 block text-sm font-semibold text-foreground">Email *</label>
-                      <input id="email" type="email" className={inputClass} placeholder="you@example.com" value={form.email} onChange={set("email")} autoComplete="email" />
-                      {field("email")}
-                    </div>
+                  <div>
+                    <label htmlFor="name" className={cn("mb-2 block text-sm font-semibold", errors.name ? "text-red-500" : "text-foreground")}>Name *</label>
+                    <input id="name" className={fieldClass("name")} placeholder="Your name" value={form.name} onChange={set("name")} onBlur={blur("name")} autoComplete="name" required aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "name-error" : undefined} />
+                    {field("name")}
                   </div>
                   <div>
-                    <label htmlFor="phone" className="mb-2 block text-sm font-semibold text-foreground">Phone number</label>
-                    <input id="phone" type="tel" className={inputClass} placeholder="03XX XXXXXXX" value={form.phone} onChange={set("phone")} autoComplete="tel" />
+                    <label htmlFor="email" className={cn("mb-2 block text-sm font-semibold", errors.email ? "text-red-500" : "text-foreground")}>Email *</label>
+                    <input id="email" type="email" className={fieldClass("email")} placeholder="you@example.com" value={form.email} onChange={set("email")} onBlur={blur("email")} autoComplete="email" required aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} />
+                    {field("email")}
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className={cn("mb-2 block text-sm font-semibold", errors.phone ? "text-red-500" : "text-foreground")}>Phone number</label>
+                    <input id="phone" type="tel" className={fieldClass("phone")} placeholder="03XX XXXXXXX" value={form.phone} onChange={set("phone")} onBlur={blur("phone")} autoComplete="tel" aria-invalid={Boolean(errors.phone)} aria-describedby={errors.phone ? "phone-error" : undefined} />
                     {field("phone")}
                   </div>
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <div>
-                      <label htmlFor="service" className="mb-2 block text-sm font-semibold text-foreground">Service *</label>
-                      <select id="service" className={inputClass} value={form.service} onChange={set("service")}>
-                        {SERVICES.map((s) => <option key={s}>{s}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label htmlFor="plan" className="mb-2 block text-sm font-semibold text-foreground">Plan</label>
-                      <select id="plan" className={inputClass} value={form.plan} onChange={set("plan")}>
-                        <option value="">Help me choose</option>
-                        {PLAN_GROUPS.map((g) => (
-                          <optgroup key={g.id} label={g.label}>
-                            {g.plans.map((p) => <option key={p.id} value={`${g.label} – ${p.name}`}>{p.name}</option>)}
-                          </optgroup>
-                        ))}
-                      </select>
-                    </div>
+                  <div>
+                    <label htmlFor="service" className="mb-2 block text-sm font-semibold text-foreground">Service *</label>
+                    <select id="service" className={inputClass} value={form.service} onChange={set("service")} required>
+                      {SERVICES.map((s) => <option key={s}>{s}</option>)}
+                    </select>
                   </div>
                   <div>
-                    <label htmlFor="message" className="mb-2 block text-sm font-semibold text-foreground">Message *</label>
-                    <textarea id="message" rows={5} className={cn(inputClass, "resize-y")} placeholder="Tell us about your business and what you need..." value={form.message} onChange={set("message")} />
+                    <label htmlFor="message" className={cn("mb-2 block text-sm font-semibold", errors.message ? "text-red-500" : "text-foreground")}>Message *</label>
+                    <textarea id="message" rows={5} className={cn(fieldClass("message"), "resize-y")} placeholder="Tell us about your business and what you need..." value={form.message} onChange={set("message")} onBlur={blur("message")} required aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : undefined} />
                     {field("message")}
                   </div>
-                  <button type="submit" className={cn(buttonVariants({ variant: "primary", size: "lg" }), "shine w-full")}>
-                    <Send /> Send message on WhatsApp
+                  {submitError ? <p role="alert" className="text-sm font-medium text-red-500">{submitError}</p> : null}
+                  <button type="submit" disabled={isSubmitting} className={cn(buttonVariants({ variant: "primary", size: "lg" }), "shine w-full disabled:cursor-not-allowed disabled:opacity-60")}>
+                    <Send /> {isSubmitting ? "Sending..." : "Send message"}
                   </button>
                   <p className="text-center text-xs text-muted-foreground">
                     Prefer email? Write to us at{" "}

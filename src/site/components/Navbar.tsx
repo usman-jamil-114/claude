@@ -1,7 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, Sparkles, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NAV_LINKS, OFFER } from "../config";
 import { SiteLink, useCurrentPath } from "../lib/adapter";
 import { cn } from "../lib/cn";
@@ -14,6 +14,8 @@ export function Navbar() {
   const path = useCurrentPath();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -26,8 +28,27 @@ export function Navbar() {
 
   const isActive = (href: string) => (href === "/" ? path === "/" : !href.includes("#") && path.startsWith(href));
 
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+      menuButtonRef.current?.focus();
+    };
+  }, [open]);
+
   return (
-    <header className="sticky top-0 z-50">
+    <header className={cn("sticky top-0", open ? "z-[60]" : "z-50")}>
       <PromoBar />
       <div
         className={cn(
@@ -42,6 +63,7 @@ export function Navbar() {
               <li key={link.href}>
                 <SiteLink
                   href={link.href}
+                  aria-current={isActive(link.href) ? "page" : undefined}
                   className={cn(
                     "relative rounded-lg px-4 py-2 text-[15px] font-medium transition-colors",
                     isActive(link.href) ? "text-foreground" : "text-muted-foreground hover:text-foreground",
@@ -71,6 +93,7 @@ export function Navbar() {
             </button>
           </div>
           <button
+            ref={menuButtonRef}
             type="button"
             className={cn(buttonVariants({ variant: "dark", size: "icon" }), "lg:hidden")}
             onClick={() => setOpen((v) => !v)}
@@ -80,36 +103,78 @@ export function Navbar() {
             {open ? <X /> : <Menu />}
           </button>
         </nav>
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {open ? (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden border-t border-border bg-background lg:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[60] flex justify-end bg-black/60 lg:hidden"
+              onClick={() => setOpen(false)}
             >
-              <div className="container-site flex flex-col gap-1 py-4">
-                {NAV_LINKS.map((link) => (
-                  <SiteLink
-                    key={link.href}
-                    href={link.href}
+              <motion.aside
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "tween", duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Mobile navigation"
+                className="flex h-full w-[min(82vw,24rem)] flex-col border-l border-border bg-brand-deep shadow-2xl"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-white/10 px-5">
+                  <div onClick={() => setOpen(false)}>
+                    <Logo />
+                  </div>
+                  <button
+                    ref={closeButtonRef}
+                    type="button"
                     onClick={() => setOpen(false)}
-                    className={cn(
-                      "rounded-lg px-3 py-3 text-base font-medium",
-                      isActive(link.href) ? "bg-secondary text-foreground" : "text-muted-foreground",
-                    )}
+                    className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "text-foreground")}
+                    aria-label="Close menu"
                   >
-                    {link.label}
-                  </SiteLink>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => openWhatsApp(DEFAULT_WA_MESSAGE, "mobile_menu")}
-                  className={cn(buttonVariants({ variant: "primary", size: "lg" }), "mt-3")}
-                >
-                  <Sparkles /> Claim {OFFER.discountPercent}% Off
-                </button>
-              </div>
+                    <X />
+                  </button>
+                </div>
+                <nav aria-label="Mobile" className="flex-1 overflow-y-auto p-4">
+                  <ul className="flex flex-col gap-1">
+                    {NAV_LINKS.map((link) => {
+                      const active = isActive(link.href);
+                      return (
+                        <li key={link.href}>
+                          <SiteLink
+                            href={link.href}
+                            onClick={() => setOpen(false)}
+                            aria-current={active ? "page" : undefined}
+                            className={cn(
+                              "block rounded-r-lg border-l-2 px-3 py-3 text-base font-semibold transition-colors",
+                              active
+                                ? "border-primary bg-white/10 text-foreground"
+                                : "border-transparent text-foreground/75 hover:bg-white/5 hover:text-foreground",
+                            )}
+                          >
+                            {link.label}
+                          </SiteLink>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </nav>
+                <div className="shrink-0 border-t border-white/10 p-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      openWhatsApp(DEFAULT_WA_MESSAGE, "mobile_menu");
+                    }}
+                    className={cn(buttonVariants({ variant: "primary", size: "lg" }), "w-full")}
+                  >
+                    <Sparkles /> Claim {OFFER.discountPercent}% Off
+                  </button>
+                </div>
+              </motion.aside>
             </motion.div>
           ) : null}
         </AnimatePresence>

@@ -32,9 +32,10 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
     title: "Contact form and WhatsApp",
     body: (
       <p>
-        Our contact form does not store your details on our website. When you press send, your message is prepared in
-        WhatsApp (operated by Meta Platforms, Inc.) and is only delivered to us once you send it from WhatsApp. If you
-        email us, your message is handled by our email provider. Messages sent through WhatsApp are also subject to{" "}
+        When configured, our contact form sends the details you submit to a Google Sheets spreadsheet managed by us
+        through a Google Apps Script web app. Google processes that information as our service provider. If the form
+        has not been configured, it will tell you and you can contact us through WhatsApp or email instead. Messages
+        sent through WhatsApp (operated by Meta Platforms, Inc.) are subject to{" "}
         <a href="https://www.whatsapp.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">WhatsApp's Privacy Policy</a>.
       </p>
     ),
@@ -79,7 +80,7 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
     body: (
       <p>
         We do not sell your personal information. We only share it with service providers that help us run our business
-        (for example hosting, email, WhatsApp and Google advertising tools), or when required by law.
+        (for example hosting, email, Google Sheets, WhatsApp and Google advertising tools), or when required by law.
       </p>
     ),
   },

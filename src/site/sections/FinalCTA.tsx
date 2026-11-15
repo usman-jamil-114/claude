@@ -15,22 +15,6 @@ export function FinalCTA({ title, subtitle }: { title?: string; subtitle?: strin
         <Reveal>
           <div className="relative overflow-hidden rounded-[2rem] bg-gradient-brand p-8 text-center md:p-16">
             <div className="absolute inset-0 bg-grid opacity-40" />
-            <img
-              src="/images/pixel-cubes.webp"
-              alt=""
-              width={640}
-              height={640}
-              loading="lazy"
-              className="pointer-events-none absolute -bottom-10 -left-10 w-40 animate-float-slow opacity-50 md:w-60"
-            />
-            <img
-              src="/images/cursor-3d.webp"
-              alt=""
-              width={640}
-              height={640}
-              loading="lazy"
-              className="pointer-events-none absolute -top-6 -right-6 w-28 animate-float opacity-70 md:w-44"
-            />
             <div className="relative">
               <p className="inline-flex rounded-full bg-background/20 px-4 py-1.5 text-sm font-bold text-primary-foreground">
                 Only {OFFER.spotsLeft} of {OFFER.totalSpots} spots left

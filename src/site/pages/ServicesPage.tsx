@@ -20,7 +20,6 @@ type Service = {
   icon: typeof Code2;
   title: string;
   intro: string;
-  image: string;
   forWho: string[];
   deliverables: { icon: typeof Code2; title: string; text: string }[];
   cta: string;
@@ -33,7 +32,6 @@ const SERVICES: Service[] = [
     title: "Website Development",
     intro:
       "Your website is your 24/7 salesperson. We design and build modern, fast and secure websites that make a great first impression and turn visitors into paying customers.",
-    image: "/images/cursor-3d.webp",
     forWho: ["Local businesses & shops", "Startups launching a product", "Service providers & clinics", "Brands selling online"],
     deliverables: [
       { icon: LayoutTemplate, title: "Landing pages", text: "Single, focused pages built to convert ad traffic into leads." },
@@ -51,7 +49,6 @@ const SERVICES: Service[] = [
     title: "Google Ads Management",
     intro:
       "Reach customers at the exact moment they're searching for what you sell. We build, run and optimise Google Ads campaigns focused on real results — calls, WhatsApp messages, leads and sales.",
-    image: "/images/percent-green.webp",
     forWho: ["Businesses wanting leads fast", "E-commerce stores", "Service businesses in any city", "Anyone wasting money on ads"],
     deliverables: [
       { icon: Search, title: "Keyword research", text: "Find the searches your best customers actually make." },
@@ -94,14 +91,6 @@ function ServiceBlock({ s, reverse }: { s: Service; reverse: boolean }) {
           </Reveal>
           <Reveal delay={0.1} className="min-w-0">
             <div className="relative rounded-[2rem] border border-border bg-gradient-card p-6 shadow-card md:p-8">
-              <img
-                src={s.image}
-                alt=""
-                width={640}
-                height={640}
-                loading="lazy"
-                className="pointer-events-none absolute -top-12 -right-2 w-28 md:-right-8 animate-float md:w-44"
-              />
               <div className="grid gap-4 sm:grid-cols-2">
                 {s.deliverables.map((d, i) => (
                   <motion.div

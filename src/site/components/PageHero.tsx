@@ -8,13 +8,6 @@ export function PageHero({ eyebrow, title, subtitle, children }: { eyebrow: Reac
     <section className="relative isolate overflow-hidden pt-16 pb-14 md:pt-24 md:pb-20">
       <div className="absolute inset-0 -z-10 bg-gradient-hero" />
       <div className="absolute inset-0 -z-10 bg-grid" />
-      <img
-        src="/images/pixel-cubes.webp"
-        alt=""
-        width={640}
-        height={640}
-        className="pointer-events-none absolute top-8 -right-16 -z-10 w-40 animate-float-slow opacity-50 md:right-[4%] md:w-56"
-      />
       <div className="container-site text-center">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
           <Eyebrow>{eyebrow}</Eyebrow>

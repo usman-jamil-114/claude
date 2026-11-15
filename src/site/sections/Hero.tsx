@@ -1,7 +1,7 @@
 "use client";
-import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { OFFER } from "../config";
 import { SiteLink } from "../lib/adapter";
 import { cn } from "../lib/cn";
@@ -36,42 +36,10 @@ function Typewriter() {
 }
 
 export function Hero() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const yA = useTransform(scrollYProgress, [0, 1], [0, 160]);
-  const yB = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const yC = useTransform(scrollYProgress, [0, 1], [0, 90]);
-
   return (
-    <section ref={ref} className="relative isolate overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32">
+    <section className="relative isolate overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32">
       <div className="absolute inset-0 -z-10 bg-gradient-hero" />
       <div className="absolute inset-0 -z-10 bg-grid animate-grid" />
-
-      {/* Floating 3D shapes */}
-      <motion.img
-        style={{ y: yA }}
-        src="/images/percent-green.webp"
-        alt=""
-        width={640}
-        height={640}
-        className="pointer-events-none absolute top-10 -right-10 -z-10 w-40 animate-float opacity-90 md:top-16 md:right-[6%] md:w-64"
-      />
-      <motion.img
-        style={{ y: yB }}
-        src="/images/pixel-cubes.webp"
-        alt=""
-        width={640}
-        height={640}
-        className="pointer-events-none absolute bottom-6 -left-12 -z-10 w-36 animate-float-slow opacity-80 md:bottom-16 md:left-[5%] md:w-56"
-      />
-      <motion.img
-        style={{ y: yC }}
-        src="/images/cursor-3d.webp"
-        alt=""
-        width={640}
-        height={640}
-        className="pointer-events-none absolute top-1/2 left-[14%] -z-10 hidden w-28 animate-float opacity-80 xl:block"
-      />
 
       <div className="container-site relative text-center">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>

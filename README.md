@@ -40,6 +40,15 @@ Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_GOOGLE_TAG_ID` (e.g. `A
 The site sends `whatsapp_click` (with a `source`, e.g. `hero`, `plan_web-business`) and `generate_lead` events
 that you can mark as conversions in Google Ads / GA4.
 
+## Google Sheets contact form (optional)
+
+The static contact form can POST to a Google Apps Script web app. Deploy a script that accepts a JSON POST and appends
+the `submittedAt`, `name`, `email`, `phone`, `service`, and `message` values to your spreadsheet. Set
+`NEXT_PUBLIC_GOOGLE_SHEETS_URL` in `.env.local` to the deployed web app URL, then rebuild and redeploy the site.
+The browser sends the request in `no-cors` mode, so it cannot read the script's response; verify submissions in the
+spreadsheet when setting up the endpoint. Until the URL is configured, the form will explain that it is unavailable
+and show the WhatsApp and email alternatives.
+
 ## Where things are
 
 ```
@@ -49,6 +58,6 @@ src/site/pages/     the five pages
 src/site/sections/  home page sections (hero, offer, pricing, FAQ…)
 src/site/components/ navbar, red promo bar, footer, WhatsApp button…
 src/app/globals.css colours, fonts and animations (design system)
-public/             logo, favicon and 3D images
+public/             logo and favicon
 ```
 "# claude" 
