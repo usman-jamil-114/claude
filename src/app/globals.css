@@ -1,0 +1,326 @@
+/*
+ * Tailwind v4 entry: config lives here, with no tailwind.config.js or PostCSS plugin.
+ * Keep every @import in this top block. Web fonts load via <link> in the root head.
+ */
+@import "tailwindcss" source(none);
+@source "../";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * PixelToPPC design system — dark "developer" look with the two logo greens
+ * (#00C48C bright, #064E3B deep) and a Hostinger-style promo red for urgency.
+ */
+
+@theme inline {
+  --font-sans: var(--font-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-montserrat), "Montserrat", "Plus Jakarta Sans", ui-sans-serif, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-glow: var(--primary-glow);
+  --color-brand-deep: var(--brand-deep);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-promo: var(--promo);
+  --color-promo-foreground: var(--promo-foreground);
+  --color-highlight: var(--highlight);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-inverse: var(--inverse);
+  --color-inverse-foreground: var(--inverse-foreground);
+  --color-whatsapp: var(--whatsapp);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-marquee-slow: marquee 60s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 10s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.2s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+  --animate-shine: shine 3.5s ease-in-out infinite;
+  --animate-blink: blink 1s step-end infinite;
+  --animate-grid: grid-pan 18s linear infinite;
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* Surfaces: deep navy like the reference, slightly cool */
+  --background: oklch(0.165 0.024 264);
+  --foreground: oklch(0.975 0.005 250);
+  --surface: oklch(0.19 0.026 264);
+  --surface-raised: oklch(0.225 0.028 262);
+  --card: oklch(0.205 0.027 263);
+  --card-foreground: oklch(0.975 0.005 250);
+  --popover: oklch(0.205 0.027 263);
+  --popover-foreground: oklch(0.975 0.005 250);
+
+  /* Brand greens from the logo */
+  --primary: oklch(0.726 0.155 164);
+  --primary-glow: oklch(0.82 0.16 162);
+  --primary-foreground: oklch(0.2 0.04 170);
+  --brand-deep: oklch(0.378 0.073 169);
+
+  --secondary: oklch(0.26 0.028 262);
+  --secondary-foreground: oklch(0.975 0.005 250);
+  --muted: oklch(0.24 0.026 262);
+  --muted-foreground: oklch(0.74 0.022 256);
+  --accent: oklch(0.28 0.04 200);
+  --accent-foreground: oklch(0.975 0.005 250);
+
+  /* Urgency red (top bar, discount badges) */
+  --promo: oklch(0.64 0.215 25);
+  --promo-foreground: oklch(0.99 0 0);
+  --highlight: oklch(0.88 0.16 95);
+
+  --inverse: oklch(0.985 0.003 250);
+  --inverse-foreground: oklch(0.17 0.024 264);
+  --whatsapp: oklch(0.72 0.17 150);
+
+  --destructive: oklch(0.64 0.215 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.726 0.155 164);
+
+  --chart-1: oklch(0.726 0.155 164);
+  --chart-2: oklch(0.378 0.073 169);
+  --chart-3: oklch(0.64 0.215 25);
+  --chart-4: oklch(0.88 0.16 95);
+  --chart-5: oklch(0.74 0.022 256);
+  --sidebar: oklch(0.19 0.026 264);
+  --sidebar-foreground: oklch(0.975 0.005 250);
+  --sidebar-primary: oklch(0.726 0.155 164);
+  --sidebar-primary-foreground: oklch(0.2 0.04 170);
+  --sidebar-accent: oklch(0.26 0.028 262);
+  --sidebar-accent-foreground: oklch(0.975 0.005 250);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.726 0.155 164);
+
+  /* Gradients & shadows */
+  --gradient-brand: linear-gradient(120deg, var(--primary-glow), var(--primary) 45%, var(--brand-deep));
+  --gradient-text: linear-gradient(100deg, var(--primary-glow) 0%, var(--primary) 50%, oklch(0.8 0.12 190) 100%);
+  --gradient-hero: radial-gradient(60% 55% at 50% 0%, color-mix(in oklab, var(--brand-deep) 70%, transparent) 0%, transparent 70%),
+    radial-gradient(40% 40% at 85% 30%, color-mix(in oklab, var(--primary) 18%, transparent) 0%, transparent 70%),
+    radial-gradient(35% 35% at 10% 60%, color-mix(in oklab, var(--primary) 12%, transparent) 0%, transparent 70%);
+  --gradient-card: linear-gradient(180deg, var(--surface-raised), var(--card));
+  --gradient-featured: linear-gradient(180deg, color-mix(in oklab, var(--brand-deep) 55%, var(--card)), var(--card) 60%);
+  --gradient-promo: linear-gradient(90deg, var(--promo), oklch(0.6 0.22 15));
+  --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--primary) 35%, transparent),
+    0 20px 60px -20px color-mix(in oklab, var(--primary) 55%, transparent);
+  --shadow-card: 0 24px 60px -30px oklch(0 0 0 / 70%);
+  --shadow-promo: 0 10px 30px -10px color-mix(in oklab, var(--promo) 60%, transparent);
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 40%, transparent);
+  }
+}
+
+@utility text-gradient {
+  background-image: var(--gradient-text);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-gradient-brand {
+  background-image: var(--gradient-brand);
+}
+
+@utility bg-gradient-hero {
+  background-image: var(--gradient-hero);
+}
+
+@utility bg-gradient-card {
+  background-image: var(--gradient-card);
+}
+
+@utility bg-gradient-featured {
+  background-image: var(--gradient-featured);
+}
+
+@utility bg-gradient-promo {
+  background-image: var(--gradient-promo);
+}
+
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+@utility shadow-promo {
+  box-shadow: var(--shadow-promo);
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--foreground) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 6%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 75%);
+}
+
+@utility glass {
+  background: color-mix(in oklab, var(--card) 70%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+@utility shine {
+  position: relative;
+  overflow: hidden;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, oklch(1 0 0 / 35%) 50%, transparent 70%);
+    transform: translateX(-120%);
+    animation: shine 3.5s ease-in-out infinite;
+  }
+}
+
+@utility container-site {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(4deg);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@keyframes shine {
+  0%,
+  60% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes grid-pan {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 56px 56px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

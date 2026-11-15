@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="35 160 400 400" width="400" height="400" role="img" aria-labelledby="t">
+  <title id="t">PixelToPPC mark</title>
+  <g>
+    <circle cx="214.5" cy="338" r="131" fill="none" stroke="#064E3B" stroke-width="43"/>
+    <line x1="323" y1="429" x2="389" y2="512" stroke="#064E3B" stroke-width="33" stroke-linecap="round"/>
+    <g fill="#00C48C">
+      <rect x="222" y="270" width="63" height="60" rx="11"/>
+      <rect x="152" y="319" width="57" height="48" rx="10"/>
+      <rect x="206" y="366" width="48" height="47" rx="9"/>
+      <rect x="152" y="388" width="36" height="33" rx="7"/>
+    </g>
+  </g>
+</svg>
