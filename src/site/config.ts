@@ -186,7 +186,6 @@ export const PLAN_GROUPS: PlanGroup[] = [
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
-  { href: "/#pricing", label: "Pricing" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ] as const;

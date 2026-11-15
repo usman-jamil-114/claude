@@ -103,82 +103,82 @@ export function Navbar() {
             {open ? <X /> : <Menu />}
           </button>
         </nav>
-        <AnimatePresence initial={false}>
-          {open ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[60] flex justify-end bg-black/60 lg:hidden"
-              onClick={() => setOpen(false)}
-            >
-              <motion.aside
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ type: "tween", duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                role="dialog"
-                aria-modal="true"
-                aria-label="Mobile navigation"
-                className="flex h-full w-[min(82vw,24rem)] flex-col border-l border-border bg-brand-deep shadow-2xl"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-white/10 px-5">
-                  <div onClick={() => setOpen(false)}>
-                    <Logo />
-                  </div>
-                  <button
-                    ref={closeButtonRef}
-                    type="button"
-                    onClick={() => setOpen(false)}
-                    className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "text-foreground")}
-                    aria-label="Close menu"
-                  >
-                    <X />
-                  </button>
-                </div>
-                <nav aria-label="Mobile" className="flex-1 overflow-y-auto p-4">
-                  <ul className="flex flex-col gap-1">
-                    {NAV_LINKS.map((link) => {
-                      const active = isActive(link.href);
-                      return (
-                        <li key={link.href}>
-                          <SiteLink
-                            href={link.href}
-                            onClick={() => setOpen(false)}
-                            aria-current={active ? "page" : undefined}
-                            className={cn(
-                              "block rounded-r-lg border-l-2 px-3 py-3 text-base font-semibold transition-colors",
-                              active
-                                ? "border-primary bg-white/10 text-foreground"
-                                : "border-transparent text-foreground/75 hover:bg-white/5 hover:text-foreground",
-                            )}
-                          >
-                            {link.label}
-                          </SiteLink>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </nav>
-                <div className="shrink-0 border-t border-white/10 p-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOpen(false);
-                      openWhatsApp(DEFAULT_WA_MESSAGE, "mobile_menu");
-                    }}
-                    className={cn(buttonVariants({ variant: "primary", size: "lg" }), "w-full")}
-                  >
-                    <Sparkles /> Claim {OFFER.discountPercent}% Off
-                  </button>
-                </div>
-              </motion.aside>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
       </div>
+      <AnimatePresence initial={false}>
+        {open ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[60] flex justify-end bg-black/60 lg:hidden"
+            onClick={() => setOpen(false)}
+          >
+            <motion.aside
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation"
+              className="flex h-full w-[min(82vw,24rem)] flex-col border-l border-border bg-brand-deep shadow-2xl"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-white/10 px-5">
+                <div onClick={() => setOpen(false)}>
+                  <Logo />
+                </div>
+                <button
+                  ref={closeButtonRef}
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "text-foreground")}
+                  aria-label="Close menu"
+                >
+                  <X />
+                </button>
+              </div>
+              <nav aria-label="Mobile" className="flex-1 overflow-y-auto p-4">
+                <ul className="flex flex-col gap-1">
+                  {NAV_LINKS.map((link) => {
+                    const active = isActive(link.href);
+                    return (
+                      <li key={link.href}>
+                        <SiteLink
+                          href={link.href}
+                          onClick={() => setOpen(false)}
+                          aria-current={active ? "page" : undefined}
+                          className={cn(
+                            "block rounded-r-lg border-l-2 px-3 py-3 text-base font-semibold transition-colors",
+                            active
+                              ? "border-primary bg-white/10 text-foreground"
+                              : "border-transparent text-foreground/75 hover:bg-white/5 hover:text-foreground",
+                          )}
+                        >
+                          {link.label}
+                        </SiteLink>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+              <div className="shrink-0 border-t border-white/10 p-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    openWhatsApp(DEFAULT_WA_MESSAGE, "mobile_menu");
+                  }}
+                  className={cn(buttonVariants({ variant: "primary", size: "lg" }), "w-full")}
+                >
+                  <Sparkles /> Claim {OFFER.discountPercent}% Off
+                </button>
+              </div>
+            </motion.aside>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </header>
   );
 }

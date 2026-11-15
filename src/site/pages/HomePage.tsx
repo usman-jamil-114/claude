@@ -1,5 +1,4 @@
 "use client";
-import { Comparison } from "../sections/Comparison";
 import { FAQ } from "../sections/FAQ";
 import { FinalCTA } from "../sections/FinalCTA";
 import { Hero } from "../sections/Hero";
@@ -20,7 +19,6 @@ export function HomePage() {
       <WhyUs />
       <Pricing />
       <Process />
-      <Comparison />
       <FAQ />
       <FinalCTA />
     </>
