@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Mail } from "lucide-react";
+import { FileText, Mail } from "lucide-react";
 import { OFFER, SITE } from "../config";
 import { SiteLink } from "../lib/adapter";
 import { cn } from "../lib/cn";
@@ -29,19 +29,31 @@ export function FinalCTA({ title, subtitle }: { title?: string; subtitle?: strin
                 <button
                   type="button"
                   onClick={() => openWhatsApp(DEFAULT_WA_MESSAGE, "final_cta")}
-                  className={cn(buttonVariants({ variant: "inverse", size: "lg" }), "shine w-full sm:w-auto")}
+                  className={cn(
+                    buttonVariants({ variant: "inverse", size: "lg" }),
+                    "shine w-full cursor-pointer sm:w-52 hover:bg-inverse hover:text-inverse-foreground",
+                  )}
                 >
                   <WhatsAppIcon className="text-whatsapp" /> Chat on WhatsApp
                 </button>
+                <SiteLink
+                  href="/contact"
+                  className={cn(
+                    buttonVariants({ variant: "dark", size: "lg" }),
+                    "w-full sm:w-52",
+                  )}
+                >
+                  <FileText /> Fill the form
+                </SiteLink>
                 <a
                   href={`mailto:${SITE.email}`}
-                  className={cn(buttonVariants({ variant: "dark", size: "lg" }), "w-full sm:w-auto")}
+                  className={cn(
+                    buttonVariants({ variant: "inverse", size: "lg" }),
+                    "w-full sm:w-52 hover:bg-inverse hover:text-inverse-foreground",
+                  )}
                 >
                   <Mail /> Email us
                 </a>
-                <SiteLink href="/contact" className="inline-flex items-center gap-1.5 px-3 text-sm font-semibold text-primary-foreground hover:underline">
-                  Or fill the form <ArrowRight className="size-4" />
-                </SiteLink>
               </div>
             </div>
           </div>

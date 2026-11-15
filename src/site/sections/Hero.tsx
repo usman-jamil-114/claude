@@ -1,5 +1,5 @@
 "use client";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { OFFER } from "../config";
@@ -12,25 +12,35 @@ const WORDS = ["Websites that sell", "Google Ads that convert", "Landing pages f
 
 function Typewriter() {
   const [index, setIndex] = useState(0);
+  const [visibleCharacters, setVisibleCharacters] = useState(0);
   useEffect(() => {
-    const t = window.setInterval(() => setIndex((i) => (i + 1) % WORDS.length), 2600);
-    return () => window.clearInterval(t);
-  }, []);
+    const word = WORDS[index];
+    let characterCount = 0;
+    let nextWordTimeout: number | undefined;
+
+    const typingInterval = window.setInterval(() => {
+      characterCount += 1;
+      setVisibleCharacters(characterCount);
+
+      if (characterCount === word.length) {
+        window.clearInterval(typingInterval);
+        nextWordTimeout = window.setTimeout(() => {
+          setVisibleCharacters(0);
+          setIndex((current) => (current + 1) % WORDS.length);
+        }, 1400);
+      }
+    }, 65);
+
+    return () => {
+      window.clearInterval(typingInterval);
+      if (nextWordTimeout !== undefined) window.clearTimeout(nextWordTimeout);
+    };
+  }, [index]);
+
   return (
     <span className="inline-flex items-baseline">
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.span
-          key={index}
-          initial={{ y: 14, opacity: 0, filter: "blur(6px)" }}
-          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-          exit={{ y: -14, opacity: 0, filter: "blur(6px)" }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="inline-block text-primary"
-        >
-          {WORDS[index]}
-        </motion.span>
-      </AnimatePresence>
-      <span className="ml-1 inline-block h-[0.9em] w-[3px] translate-y-[0.1em] animate-blink bg-primary" />
+      <span className="inline-block text-primary">{WORDS[index].slice(0, visibleCharacters)}</span>
+      <span aria-hidden="true" className="ml-1 inline-block h-[0.9em] w-[3px] translate-y-[0.1em] animate-blink bg-primary" />
     </span>
   );
 }
