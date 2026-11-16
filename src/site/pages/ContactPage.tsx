@@ -97,7 +97,7 @@ export function ContactPage() {
   return (
     <section className="relative isolate overflow-hidden py-16 md:py-24">
       <div className="absolute inset-0 -z-10 bg-gradient-hero" />
-      <div className="container-site grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
+      <div className="container-site grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-[130px] lg:px-[100px]">
         <Reveal>
           <Eyebrow>Contact us</Eyebrow>
           <h1 className="mt-6 text-4xl leading-tight font-black text-foreground md:text-6xl">
