@@ -55,26 +55,26 @@ function BrowserMock() {
 
 function AdsMock() {
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-border bg-background p-3 shadow-card sm:p-4">
-      <div className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-xs text-muted-foreground">
+    <div className="flex h-full min-h-0 flex-col rounded-2xl border border-border bg-background p-3 shadow-card sm:p-4">
+      <div className="flex shrink-0 items-center gap-2 rounded-full border border-border px-3 py-2 text-xs text-muted-foreground sm:px-4">
         <Search className="size-3.5" /> best service near me
       </div>
-      <div className="mt-4 flex flex-1 flex-col justify-between rounded-xl border border-primary/30 p-3 sm:p-4">
+      <div className="mt-3 flex min-h-0 flex-1 flex-col justify-between overflow-hidden rounded-xl border border-primary/30 p-3 sm:mt-4 sm:p-4">
         <div>
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="rounded border border-border px-1.5 py-0.5 font-bold text-foreground">Ad</span>
             yourbusiness.com
           </p>
-          <p className="mt-2 text-base font-semibold text-sky-400">Your Business | Fast, Trusted Service</p>
-          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-2 text-sm font-semibold text-sky-400 sm:text-base">Your Business | Fast, Trusted Service</p>
+          <p className="mt-1 text-xs leading-snug text-muted-foreground sm:text-sm sm:leading-relaxed">
             Book today and get a quick reply. Message us on WhatsApp for a free quote.
           </p>
         </div>
-        <div className="mt-3 flex flex-wrap gap-2 text-xs font-medium text-foreground">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5">
+        <div className="mt-2 flex flex-wrap gap-1.5 text-xs font-medium text-foreground sm:mt-3 sm:gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-2 py-1 sm:px-3 sm:py-1.5">
             <Phone className="size-3.5" /> Call
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-2 py-1 sm:px-3 sm:py-1.5">
             <MessageCircle className="size-3.5" /> Get a quote
           </span>
         </div>

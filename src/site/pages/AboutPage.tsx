@@ -106,8 +106,8 @@ export function AboutPage() {
       <section className="py-16 md:py-24">
         <div className="container-site">
           <Reveal>
-            <div className="grid gap-10 rounded-[2rem] border border-border bg-gradient-card p-4 sm:p-8 md:p-14 lg:grid-cols-2">
-              <div>
+            <div className="grid min-w-0 gap-10 rounded-[2rem] border border-border bg-gradient-card p-4 sm:p-8 md:p-14 lg:grid-cols-2">
+              <div className="min-w-0">
                 <h2 className="text-3xl font-extrabold text-foreground md:text-4xl">Our promise to you</h2>
                 <p className="mt-4 text-muted-foreground">
                   Working with a new studio should feel safe. Here's what you can always expect from us.
@@ -115,12 +115,15 @@ export function AboutPage() {
                 <button
                   type="button"
                   onClick={() => openWhatsApp(DEFAULT_WA_MESSAGE, "about_promise")}
-                  className={cn(buttonVariants({ variant: "primary", size: "lg" }), "shine mt-8")}
+                  className={cn(
+                    buttonVariants({ variant: "primary", size: "lg" }),
+                    "shine mt-8 h-auto min-h-14 w-full max-w-full whitespace-normal px-3 py-3 text-center text-sm leading-tight sm:h-14 sm:w-auto sm:whitespace-nowrap sm:px-8 sm:text-base",
+                  )}
                 >
                   <Sparkles /> Start with a free consultation
                 </button>
               </div>
-              <ul className="space-y-4">
+              <ul className="min-w-0 space-y-4">
                 {PROMISES.map((p, i) => (
                   <motion.li
                     key={p}
@@ -128,12 +131,12 @@ export function AboutPage() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    className="flex items-center gap-4 rounded-2xl border border-border bg-background/60 p-3 text-foreground sm:p-5"
+                    className="flex min-w-0 items-center gap-4 rounded-2xl border border-border bg-background/60 p-3 text-foreground sm:p-5"
                   >
                     <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary font-display font-black text-primary-foreground">
                       {i + 1}
                     </span>
-                    {p}
+                    <span className="min-w-0">{p}</span>
                   </motion.li>
                 ))}
               </ul>

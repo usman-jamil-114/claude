@@ -118,7 +118,7 @@ export function OfferSpots() {
                 </p>
 
                 <p className="mt-7 text-xs font-semibold tracking-widest text-muted-foreground uppercase">Offer ends in</p>
-                <Countdown compact className="mt-3 w-full justify-between" />
+                <Countdown compact className="mt-3 w-full justify-center" />
 
                 <button
                   type="button"

@@ -195,7 +195,7 @@ export function ContactPage() {
                   </div>
                   <div>
                     <label htmlFor="service" className="mb-2 block text-sm font-semibold text-foreground">Service *</label>
-                    <select id="service" className={inputClass} value={form.service} onChange={set("service")} required>
+                    <select id="service" className={cn(inputClass, "appearance-none")} value={form.service} onChange={set("service")} required>
                       {SERVICES.map((s) => <option key={s}>{s}</option>)}
                     </select>
                   </div>
