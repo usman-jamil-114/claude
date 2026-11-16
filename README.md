@@ -3,7 +3,7 @@
 Next.js (App Router) + Tailwind CSS v4 + Motion. Dark design in the PixelToPPC greens, red offer bar,
 85%-off launch offer with a spots counter, Hostinger-style pricing, and WhatsApp-first contact.
 
-Pages: Home `/`, Services `/services`, About `/about`, Contact `/contact`, Privacy `/privacy`.
+Pages: Home `/`, Services `/services`, About `/about`, Contact `/contact`, Privacy `/privacy`, Thank You `/thank-you`.
 
 ## Run it on your computer
 
@@ -20,9 +20,8 @@ npm run dev        # open http://localhost:3000
 npm run build
 ```
 
-This creates an `out/` folder with plain HTML/CSS/JS. Upload the **contents** of `out/` to any host:
-Hostinger (File Manager → `public_html`), Netlify, Vercel, Cloudflare Pages, cPanel, etc.
-Preview the built site locally with `npm start`.
+This project uses a Next.js API route for contact form submissions, so deploy it to a host that supports Next.js
+server features, such as Vercel or a Node.js server. Run the production server with `npm start`.
 
 ## Edit your business details, offer and prices
 
@@ -40,14 +39,12 @@ Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_GOOGLE_TAG_ID` (e.g. `A
 The site sends `whatsapp_click` (with a `source`, e.g. `hero`, `plan_web-business`) and `generate_lead` events
 that you can mark as conversions in Google Ads / GA4.
 
-## Google Sheets contact form (optional)
+## Google Sheets contact form
 
-The static contact form can POST to a Google Apps Script web app. Deploy a script that accepts a JSON POST and appends
-the `submittedAt`, `name`, `email`, `phone`, `service`, and `message` values to your spreadsheet. Set
-`NEXT_PUBLIC_GOOGLE_SHEETS_URL` in `.env.local` to the deployed web app URL, then rebuild and redeploy the site.
-The browser sends the request in `no-cors` mode, so it cannot read the script's response; verify submissions in the
-spreadsheet when setting up the endpoint. Until the URL is configured, the form will explain that it is unavailable
-and show the WhatsApp and email alternatives.
+The contact form posts to `/api/contact/`, which forwards validated submissions to a Google Apps Script web app.
+Set the server-only `SHEET_URL` and `SHEET_SECRET` values in `.env.local`. The script should validate the shared
+secret, append the submitted name, email, phone, service and message to the sheet, and respond with the exact text
+`ok` on success. Never expose these values through `NEXT_PUBLIC_` variables.
 
 ## Where things are
 

@@ -2,6 +2,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { CheckCircle2, Clock, Mail, MessageSquareText, Send, Sparkles } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { OFFER, SITE } from "../config";
 import { cn } from "../lib/cn";
 import { track } from "../lib/track";
@@ -12,18 +13,28 @@ import { Reveal } from "../components/Reveal";
 import { Eyebrow } from "../components/SectionHeading";
 
 const SERVICES = ["Website Development", "Google Ads", "Both (Website + Google Ads)", "Not sure yet"];
-const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL?.trim();
 
 type Form = { name: string; email: string; phone: string; service: string; message: string };
 type FormField = keyof Form;
+type ContactResponse = { ok: true } | { ok: false; error: string };
 const EMPTY: Form = { name: "", email: "", phone: "", service: SERVICES[0]!, message: "" };
+
+function isContactResponse(value: unknown): value is ContactResponse {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "ok" in value &&
+    (value.ok === true || (value.ok === false && "error" in value && typeof value.error === "string"))
+  );
+}
 
 function validate(f: Form): Partial<Record<keyof Form, string>> {
   const e: Partial<Record<keyof Form, string>> = {};
   if (f.name.trim().length < 2) e.name = "Please enter your name";
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) e.email = "Please enter a valid email";
   const phone = f.phone.trim().replace(/[\s-]/g, "");
-  if (phone && !/^(?:03\d{9}|\+?92\d{10})$/.test(phone)) e.phone = "Please enter a valid Pakistani mobile number";
+  if (!phone) e.phone = "Please enter your phone number";
+  else if (!/^(?:03\d{9}|\+?92\d{10})$/.test(phone)) e.phone = "Please enter a valid Pakistani mobile number";
   if (f.message.trim().length < 10) e.message = "Tell us a little more (at least 10 characters)";
   return e;
 }
@@ -32,9 +43,11 @@ const inputClass =
   "w-full rounded-xl border border-input bg-background px-3 py-3 text-foreground placeholder:text-muted-foreground/70 transition focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none sm:px-4";
 
 export function ContactPage() {
+  const router = useRouter();
   const [form, setForm] = useState<Form>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof Form, string>>>({});
-  const [touched, setTouched] = useState<Partial<Record<keyof Form, boolean>>>({});
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [website, setWebsite] = useState("");
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -44,42 +57,38 @@ export function ContactPage() {
     const next = { ...form, [k]: value };
     setForm(next);
     setSubmitError("");
-    if (touched[k]) setErrors((current) => ({ ...current, [k]: validate(next)[k] }));
-  };
-
-  const blur = (k: FormField) => () => {
-    setTouched((current) => ({ ...current, [k]: true }));
-    setErrors((current) => ({ ...current, [k]: validate(form)[k] }));
+    if (hasSubmitted) setErrors(validate(next));
   };
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const errs = validate(form);
+    setHasSubmitted(true);
+    setSubmitError("");
+    const errs = website.trim() ? {} : validate(form);
     setErrors(errs);
-    setTouched({ name: true, email: true, phone: true, message: true });
     if (Object.keys(errs).length) return;
-    if (!GOOGLE_SHEETS_URL) {
-      setSubmitError("The contact form is not connected yet. Please contact us by WhatsApp or email for now.");
-      return;
-    }
 
     setIsSubmitting(true);
-    setSubmitError("");
     try {
-      const response = await fetch(GOOGLE_SHEETS_URL, {
+      const response = await fetch("/api/contact/", {
         method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ ...form, submittedAt: new Date().toISOString() }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, website }),
       });
-      if (response.type !== "opaque" && !response.ok) {
-        throw new Error(`Contact submission failed with status ${response.status}`);
+      const result: unknown = await response.json();
+      if (!isContactResponse(result)) {
+        throw new Error("The server returned an invalid response.");
       }
+      if (!response.ok || !result.ok) {
+        throw new Error(result.ok ? "Could not save your message" : result.error);
+      }
+
       track("generate_lead", { method: "google_sheets", service: form.service });
       setSent(true);
+      router.push("/thank-you/");
     } catch (error) {
-      console.error("Could not submit the contact form to Google Sheets.", error);
-      setSubmitError("We couldn't send your message. Please try again or contact us by WhatsApp or email.");
+      console.error("Could not submit the contact form.", error);
+      setSubmitError(error instanceof Error ? error.message : "Could not save your message");
     } finally {
       setIsSubmitting(false);
     }
@@ -169,7 +178,7 @@ export function ContactPage() {
                       setSent(false);
                       setForm(EMPTY);
                       setErrors({});
-                      setTouched({});
+                      setHasSubmitted(false);
                     }}
                     className={cn(buttonVariants({ variant: "outline" }), "mt-8")}
                   >
@@ -178,34 +187,58 @@ export function ContactPage() {
                 </motion.div>
               ) : (
                 <motion.form key="form" onSubmit={onSubmit} noValidate className="space-y-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <div className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
+                    <label htmlFor="website">Website</label>
+                    <input
+                      id="website"
+                      name="website"
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                    />
+                  </div>
                   <div>
                     <label htmlFor="name" className={cn("mb-2 block text-sm font-semibold", errors.name ? "text-red-500" : "text-foreground")}>Name *</label>
-                    <input id="name" className={fieldClass("name")} placeholder="Your name" value={form.name} onChange={set("name")} onBlur={blur("name")} autoComplete="name" required aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "name-error" : undefined} />
+                    <input id="name" name="name" className={fieldClass("name")} placeholder="Your name" value={form.name} onChange={set("name")} autoComplete="name" required aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "name-error" : undefined} />
                     {field("name")}
                   </div>
                   <div>
                     <label htmlFor="email" className={cn("mb-2 block text-sm font-semibold", errors.email ? "text-red-500" : "text-foreground")}>Email *</label>
-                    <input id="email" type="email" className={fieldClass("email")} placeholder="you@example.com" value={form.email} onChange={set("email")} onBlur={blur("email")} autoComplete="email" required aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} />
+                    <input id="email" name="email" type="email" className={fieldClass("email")} placeholder="you@example.com" value={form.email} onChange={set("email")} autoComplete="email" required aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} />
                     {field("email")}
                   </div>
                   <div>
                     <label htmlFor="phone" className={cn("mb-2 block text-sm font-semibold", errors.phone ? "text-red-500" : "text-foreground")}>Phone number</label>
-                    <input id="phone" type="tel" className={fieldClass("phone")} placeholder="03XX XXXXXXX" value={form.phone} onChange={set("phone")} onBlur={blur("phone")} autoComplete="tel" aria-invalid={Boolean(errors.phone)} aria-describedby={errors.phone ? "phone-error" : undefined} />
+                    <input id="phone" name="phone" type="tel" className={fieldClass("phone")} placeholder="03XX XXXXXXX" value={form.phone} onChange={set("phone")} autoComplete="tel" required aria-invalid={Boolean(errors.phone)} aria-describedby={errors.phone ? "phone-error" : undefined} />
                     {field("phone")}
                   </div>
                   <div>
                     <label htmlFor="service" className="mb-2 block text-sm font-semibold text-foreground">Service *</label>
-                    <select id="service" className={cn(inputClass, "appearance-none")} value={form.service} onChange={set("service")} required>
+                    <select id="service" name="service" className={cn(inputClass, "appearance-none")} value={form.service} onChange={set("service")} required>
                       {SERVICES.map((s) => <option key={s}>{s}</option>)}
                     </select>
                   </div>
                   <div>
                     <label htmlFor="message" className={cn("mb-2 block text-sm font-semibold", errors.message ? "text-red-500" : "text-foreground")}>Message *</label>
-                    <textarea id="message" rows={5} className={cn(fieldClass("message"), "resize-y")} placeholder="Tell us about your business and what you need..." value={form.message} onChange={set("message")} onBlur={blur("message")} required aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : undefined} />
+                    <textarea id="message" name="message" rows={5} className={cn(fieldClass("message"), "resize-y")} placeholder="Tell us about your business and what you need..." value={form.message} onChange={set("message")} required aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : undefined} />
                     {field("message")}
                   </div>
-                  {submitError ? <p role="alert" className="text-sm font-medium text-red-500">{submitError}</p> : null}
-                  <button type="submit" disabled={isSubmitting} className={cn(buttonVariants({ variant: "primary", size: "lg" }), "shine w-full disabled:cursor-not-allowed disabled:opacity-60")}>
+                  {submitError ? (
+                    <p role="alert" className="text-sm font-medium text-red-500">
+                      {submitError}. Please try again or{" "}
+                      <a
+                        href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(DEFAULT_WA_MESSAGE)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-bold underline"
+                      >
+                        contact us on WhatsApp
+                      </a>
+                      .
+                    </p>
+                  ) : null}
+                  <button type="submit" disabled={isSubmitting} className={cn(buttonVariants({ variant: "inverse", size: "lg" }), "shine w-full hover:bg-inverse hover:text-inverse-foreground disabled:cursor-not-allowed disabled:opacity-60")}>
                     <Send /> {isSubmitting ? "Sending..." : "Send message"}
                   </button>
                   <p className="text-center text-xs text-muted-foreground">

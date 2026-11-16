@@ -4,8 +4,8 @@
 export const SITE = {
   name: "PixelToPPC",
   tagline: "Websites that sell. Google Ads that convert.",
-  url: "https://pixeltoppc.com",
-  email: "usman.jamilll.114@gmail.com",
+  url: "https://pixeltoppc.shop",
+  email: "usman.jamill.114@gmail.com",
   // International format, digits only (03144178331 -> 923144178331). Never rendered on the page.
   whatsappNumber: "923144178331",
   country: "Pakistan",
