@@ -28,7 +28,7 @@ export function WhyUs() {
             <Reveal key={it.title} delay={(i % 3) * 0.08}>
               <motion.div
                 whileHover={{ y: -4 }}
-                className="group h-full rounded-2xl border border-border bg-card p-7 transition-colors hover:border-primary/40"
+                className="group h-full rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40 sm:p-7"
               >
                 <span className="grid size-12 place-items-center rounded-xl bg-brand-deep/60 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
                   <it.icon className="size-6" />

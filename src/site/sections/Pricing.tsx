@@ -19,7 +19,7 @@ function PlanCard({ plan, group, index }: { plan: Plan; group: PlanGroup; index:
       transition={{ duration: 0.45, delay: index * 0.08 }}
       whileHover={{ y: -6 }}
       className={cn(
-        "relative flex h-full flex-col rounded-3xl border p-7 transition-colors",
+        "relative flex h-full flex-col rounded-3xl border p-4 transition-colors sm:p-7",
         plan.popular
           ? "border-primary/60 bg-gradient-featured shadow-glow lg:-my-4 lg:py-11"
           : "border-border bg-card hover:border-primary/30",
@@ -63,7 +63,7 @@ function PlanCard({ plan, group, index }: { plan: Plan; group: PlanGroup; index:
         {plan.period === "month" ? " for the first month" : ""} — you save {formatPKR(saving)}. {group.note}
       </p>
 
-      <div className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-border bg-background/60 p-4">
+      <div className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-border bg-background/60 p-3 sm:p-4">
         <p className="text-sm text-foreground">
           <span className="font-bold">{plan.bonus.title}</span> {plan.bonus.text}
         </p>

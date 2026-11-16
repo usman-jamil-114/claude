@@ -90,7 +90,7 @@ function ServiceBlock({ s, reverse }: { s: Service; reverse: boolean }) {
             </button>
           </Reveal>
           <Reveal delay={0.1} className="min-w-0">
-            <div className="relative rounded-[2rem] border border-border bg-gradient-card p-6 shadow-card md:p-8">
+            <div className="relative rounded-[2rem] border border-border bg-gradient-card p-4 shadow-card sm:p-6 md:p-8">
               <div className="grid gap-4 sm:grid-cols-2">
                 {s.deliverables.map((d, i) => (
                   <motion.div
@@ -99,7 +99,7 @@ function ServiceBlock({ s, reverse }: { s: Service; reverse: boolean }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.07 }}
-                    className="rounded-2xl border border-border bg-background/70 p-5 transition-colors hover:border-primary/40"
+                    className="rounded-2xl border border-border bg-background/70 p-4 transition-colors hover:border-primary/40 sm:p-5"
                   >
                     <d.icon className="size-6 text-primary" />
                     <h3 className="mt-3 text-base font-bold text-foreground">{d.title}</h3>

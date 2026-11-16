@@ -50,7 +50,7 @@ export function FAQ({ items = FAQS }: { items?: { q: string; a: string }[] }) {
                     type="button"
                     onClick={() => setOpen(isOpen ? null : i)}
                     aria-expanded={isOpen}
-                    className="flex w-full items-center justify-between gap-4 p-6 text-left"
+                    className="flex w-full items-center justify-between gap-4 p-4 text-left sm:p-6"
                   >
                     <span className="font-display text-base font-bold text-foreground md:text-lg">{f.q}</span>
                     <motion.span animate={{ rotate: isOpen ? 45 : 0 }} className="grid size-8 shrink-0 place-items-center rounded-full bg-secondary text-primary">
@@ -66,7 +66,7 @@ export function FAQ({ items = FAQS }: { items?: { q: string; a: string }[] }) {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <p className="px-6 pb-6 leading-relaxed text-muted-foreground">{f.a}</p>
+                        <p className="px-4 pb-4 leading-relaxed text-muted-foreground sm:px-6 sm:pb-6">{f.a}</p>
                       </motion.div>
                     ) : null}
                   </AnimatePresence>

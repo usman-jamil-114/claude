@@ -17,7 +17,7 @@ function BrowserMock() {
         <span className="size-2.5 rounded-full bg-primary" />
         <span className="ml-3 h-5 flex-1 rounded-md bg-secondary px-3 text-[10px] leading-5 text-muted-foreground">yourbusiness.pk</span>
       </div>
-      <div className="flex flex-1 flex-col gap-3 p-5">
+      <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
         <motion.div
           initial={{ width: "20%" }}
           whileInView={{ width: "70%" }}
@@ -55,11 +55,11 @@ function BrowserMock() {
 
 function AdsMock() {
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-border bg-background p-4 shadow-card">
+    <div className="flex h-full flex-col rounded-2xl border border-border bg-background p-3 shadow-card sm:p-4">
       <div className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-xs text-muted-foreground">
         <Search className="size-3.5" /> best service near me
       </div>
-      <div className="mt-4 flex flex-1 flex-col justify-between rounded-xl border border-primary/30 p-4">
+      <div className="mt-4 flex flex-1 flex-col justify-between rounded-xl border border-primary/30 p-3 sm:p-4">
         <div>
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="rounded border border-border px-1.5 py-0.5 font-bold text-foreground">Ad</span>
@@ -117,7 +117,7 @@ export function ServicesOverview() {
               <motion.article
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                className="group relative h-full overflow-hidden rounded-3xl border border-border bg-gradient-card p-7 shadow-card transition-colors hover:border-primary/50 md:p-10"
+                className="group relative h-full overflow-hidden rounded-3xl border border-border bg-gradient-card p-4 shadow-card transition-colors hover:border-primary/50 sm:p-7 md:p-10"
               >
                 <div className="absolute -top-24 -right-24 size-64 rounded-full bg-primary/10 blur-3xl transition-opacity group-hover:opacity-100 md:opacity-50" />
                 <div className="relative flex h-full flex-col gap-8">

@@ -13,10 +13,10 @@ export function FinalCTA({ title, subtitle }: { title?: string; subtitle?: strin
     <section className="py-20 md:py-24">
       <div className="container-site">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-brand p-8 text-center md:p-16">
+          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-brand p-5 text-center sm:p-8 md:p-16">
             <div className="absolute inset-0 bg-grid opacity-40" />
             <div className="relative">
-              <p className="inline-flex rounded-full bg-background/20 px-4 py-1.5 text-sm font-bold text-primary-foreground">
+              <p className="inline-flex rounded-full bg-background/20 px-3 py-1.5 text-sm font-bold text-primary-foreground sm:px-4">
                 Only {OFFER.spotsLeft} of {OFFER.totalSpots} spots left
               </p>
               <h2 className="mx-auto mt-6 max-w-3xl text-3xl leading-tight font-black text-primary-foreground md:text-5xl">

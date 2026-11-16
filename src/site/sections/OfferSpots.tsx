@@ -16,18 +16,18 @@ export function OfferSpots() {
     <section id="offer" className="relative scroll-mt-32 py-20 md:py-28">
       <div className="container-site">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[2rem] border border-primary/30 bg-gradient-featured p-5 shadow-glow md:p-12 lg:p-16">
+          <div className="relative overflow-hidden rounded-[2rem] border border-primary/30 bg-gradient-featured p-3 shadow-glow sm:p-5 md:p-12 lg:p-16">
             <div className="absolute inset-0 bg-grid opacity-60" />
 
             <div className="relative grid items-center gap-12 lg:grid-cols-[1.1fr_1fr]">
               <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-nowrap items-center gap-2 sm:gap-3">
                   <motion.div
                     initial={{ rotate: -20, scale: 0 }}
                     whileInView={{ rotate: -10, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ type: "spring", stiffness: 200, damping: 12 }}
-                    className="grid size-20 place-items-center rounded-full bg-inverse font-display text-sm leading-tight font-black text-inverse-foreground [clip-path:polygon(50%_0%,61%_10%,75%_4%,79%_19%,94%_22%,90%_37%,100%_50%,90%_63%,94%_78%,79%_81%,75%_96%,61%_90%,50%_100%,39%_90%,25%_96%,21%_81%,6%_78%,10%_63%,0%_50%,10%_37%,6%_22%,21%_19%,25%_4%,39%_10%)]"
+                    className="grid size-20 shrink-0 place-items-center rounded-full bg-inverse font-display text-sm leading-tight font-black text-inverse-foreground [clip-path:polygon(50%_0%,61%_10%,75%_4%,79%_19%,94%_22%,90%_37%,100%_50%,90%_63%,94%_78%,79%_81%,75%_96%,61%_90%,50%_100%,39%_90%,25%_96%,21%_81%,6%_78%,10%_63%,0%_50%,10%_37%,6%_22%,21%_19%,25%_4%,39%_10%)]"
                   >
                     <span className="text-center">
                       UP
@@ -35,13 +35,18 @@ export function OfferSpots() {
                       TO
                     </span>
                   </motion.div>
-                  <span className="rounded-2xl bg-gradient-promo px-4 py-2 font-display text-4xl font-black sm:px-5 sm:text-5xl text-promo-foreground shadow-promo md:text-7xl">
+                  <span className="shrink-0 whitespace-nowrap rounded-2xl bg-gradient-promo px-3 py-2 font-display text-2xl font-black text-promo-foreground shadow-promo sm:px-5 sm:text-5xl md:text-7xl">
                     {OFFER.discountPercent}% OFF
                   </span>
                 </div>
 
-                <h2 className="mt-8 text-3xl leading-tight font-extrabold text-foreground md:text-5xl">
-                  On our first {OFFER.totalSpots} orders. <span className="text-gradient">Only {OFFER.spotsLeft} left.</span>
+                <h2 className="mt-8 text-[22px] leading-tight font-extrabold text-foreground sm:text-[26px] md:text-5xl">
+                  <span className="block whitespace-nowrap sm:inline sm:whitespace-normal">
+                    On our first {OFFER.totalSpots} orders.
+                  </span>{" "}
+                  <span className="block whitespace-nowrap text-gradient sm:inline sm:whitespace-normal">
+                    Only {OFFER.spotsLeft} left.
+                  </span>
                 </h2>
                 <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
                   We're a new studio, so instead of spending on big ad budgets, we're investing in our first clients.
@@ -66,7 +71,7 @@ export function OfferSpots() {
                 </ul>
               </div>
 
-              <div className="min-w-0 rounded-3xl border border-border bg-background/70 p-5 backdrop-blur md:p-8">
+              <div className="min-w-0 rounded-3xl border border-border bg-background/70 p-3 backdrop-blur sm:p-5 md:p-8">
                 <div className="flex items-center justify-between">
                   <p className="inline-flex items-center gap-2 text-sm font-bold text-foreground">
                     <Flame className="size-4 text-promo" /> Discounted spots
@@ -92,7 +97,9 @@ export function OfferSpots() {
                       )}
                     >
                       {claimed ? <Lock className="size-4" /> : <Gift className="size-4" />}
-                      <span className="mt-1">{claimed ? "Taken" : `#${i + 1}`}</span>
+                      <span className="mt-1 whitespace-nowrap text-[10px] leading-none sm:text-xs">
+                        {claimed ? "Taken" : `#${i + 1}`}
+                      </span>
                     </motion.div>
                   ))}
                 </div>
@@ -111,14 +118,17 @@ export function OfferSpots() {
                 </p>
 
                 <p className="mt-7 text-xs font-semibold tracking-widest text-muted-foreground uppercase">Offer ends in</p>
-                <Countdown className="mt-3" />
+                <Countdown compact className="mt-3 w-full justify-between" />
 
                 <button
                   type="button"
                   onClick={() => openWhatsApp(DEFAULT_WA_MESSAGE, "offer_section")}
-                  className={cn(buttonVariants({ variant: "promo", size: "lg" }), "shine mt-8 w-full")}
+                  className={cn(
+                    buttonVariants({ variant: "promo", size: "lg" }),
+                    "shine mt-8 h-auto min-h-14 w-full whitespace-normal px-3 py-3 text-center text-sm leading-tight sm:px-8 sm:text-base",
+                  )}
                 >
-                  <Sparkles /> Grab my spot before it's gone
+                  <Sparkles /> <span className="min-w-0">Grab my spot before it's gone</span>
                 </button>
               </div>
             </div>

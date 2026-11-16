@@ -135,7 +135,7 @@ export function PrivacyPage() {
               <article
                 key={s.id}
                 id={s.id}
-                className="scroll-mt-40 rounded-2xl border border-border bg-card p-7 md:p-9 [&_a]:font-semibold [&_a]:[overflow-wrap:anywhere] [&_a]:text-primary [&_a]:hover:underline [&_li]:ml-5 [&_li]:list-disc [&_p]:leading-relaxed [&_p]:text-muted-foreground [&_p+p]:mt-4 [&_strong]:text-foreground [&_ul]:space-y-2 [&_ul]:text-muted-foreground"
+                className="scroll-mt-40 rounded-2xl border border-border bg-card p-4 md:p-9 sm:p-7 [&_a]:font-semibold [&_a]:[overflow-wrap:anywhere] [&_a]:text-primary [&_a]:hover:underline [&_li]:ml-5 [&_li]:list-disc [&_p]:leading-relaxed [&_p]:text-muted-foreground [&_p+p]:mt-4 [&_strong]:text-foreground [&_ul]:space-y-2 [&_ul]:text-muted-foreground"
               >
                 <h2 className="mb-4 flex items-center gap-3 text-xl font-extrabold text-foreground md:text-2xl">
                   <span className="grid size-8 place-items-center rounded-lg bg-primary/15 font-display text-sm text-primary">{i + 1}</span>

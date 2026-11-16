@@ -70,7 +70,7 @@ export function AboutPage() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
                   className={cn(
-                    "rounded-3xl border p-7",
+                    "rounded-3xl border p-4 sm:p-7",
                     i === 1 ? "border-primary/40 bg-gradient-featured shadow-glow" : "border-border bg-card",
                   )}
                 >
@@ -90,7 +90,7 @@ export function AboutPage() {
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {VALUES.map((v, i) => (
               <Reveal key={v.title} delay={i * 0.08}>
-                <div className="h-full rounded-2xl border border-border bg-card p-7 transition-colors hover:border-primary/40">
+                <div className="h-full rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40 sm:p-7">
                   <span className="grid size-12 place-items-center rounded-xl bg-brand-deep/60 text-primary">
                     <v.icon className="size-6" />
                   </span>
@@ -106,7 +106,7 @@ export function AboutPage() {
       <section className="py-16 md:py-24">
         <div className="container-site">
           <Reveal>
-            <div className="grid gap-10 rounded-[2rem] border border-border bg-gradient-card p-8 md:p-14 lg:grid-cols-2">
+            <div className="grid gap-10 rounded-[2rem] border border-border bg-gradient-card p-4 sm:p-8 md:p-14 lg:grid-cols-2">
               <div>
                 <h2 className="text-3xl font-extrabold text-foreground md:text-4xl">Our promise to you</h2>
                 <p className="mt-4 text-muted-foreground">
@@ -128,7 +128,7 @@ export function AboutPage() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    className="flex items-center gap-4 rounded-2xl border border-border bg-background/60 p-5 text-foreground"
+                    className="flex items-center gap-4 rounded-2xl border border-border bg-background/60 p-3 text-foreground sm:p-5"
                   >
                     <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary font-display font-black text-primary-foreground">
                       {i + 1}

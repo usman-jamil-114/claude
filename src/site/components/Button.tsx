@@ -21,7 +21,7 @@ export const buttonVariants = cva(
       size: {
         sm: "h-9 px-4 text-sm",
         md: "h-11 px-6 text-sm",
-        lg: "h-14 px-8 text-base",
+        lg: "h-14 px-5 text-base sm:px-8",
         icon: "h-10 w-10",
       },
     },

@@ -29,7 +29,7 @@ function validate(f: Form): Partial<Record<keyof Form, string>> {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-input bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground/70 transition focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none";
+  "w-full rounded-xl border border-input bg-background px-3 py-3 text-foreground placeholder:text-muted-foreground/70 transition focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none sm:px-4";
 
 export function ContactPage() {
   const [form, setForm] = useState<Form>(EMPTY);
@@ -112,7 +112,7 @@ export function ContactPage() {
             <button
               type="button"
               onClick={() => openWhatsApp(DEFAULT_WA_MESSAGE, "contact_card")}
-              className="group rounded-2xl border border-border bg-card p-6 text-left transition hover:-translate-y-1 hover:border-whatsapp/60"
+              className="group rounded-2xl border border-border bg-card p-4 text-left transition hover:-translate-y-1 hover:border-whatsapp/60 sm:p-6"
             >
               <span className="grid size-12 place-items-center rounded-xl bg-whatsapp/15 text-whatsapp">
                 <WhatsAppIcon className="size-7" />
@@ -122,7 +122,7 @@ export function ContactPage() {
             </button>
             <a
               href={`mailto:${SITE.email}`}
-              className="group rounded-2xl border border-border bg-card p-6 transition hover:-translate-y-1 hover:border-primary/60"
+              className="group rounded-2xl border border-border bg-card p-4 transition hover:-translate-y-1 hover:border-primary/60 sm:p-6"
             >
               <span className="grid size-12 place-items-center rounded-xl bg-primary/15 text-primary">
                 <Mail className="size-6" />
@@ -132,7 +132,7 @@ export function ContactPage() {
             </a>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-border bg-card/60 p-6">
+          <div className="mt-10 rounded-2xl border border-border bg-card/60 p-4 sm:p-6">
             <p className="font-display font-bold text-foreground">What happens next?</p>
             <ol className="mt-4 space-y-3 text-sm text-muted-foreground">
               {[
@@ -149,7 +149,7 @@ export function ContactPage() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <div className="rounded-[2rem] border border-border bg-card p-6 shadow-card md:p-10">
+          <div className="rounded-[2rem] border border-border bg-card p-4 shadow-card sm:p-6 md:p-10">
             <AnimatePresence mode="wait">
               {sent ? (
                 <motion.div

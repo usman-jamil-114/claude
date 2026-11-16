@@ -125,7 +125,7 @@ export function Navbar() {
               className="flex h-full w-[min(82vw,24rem)] flex-col border-l border-border bg-brand-deep shadow-2xl"
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-white/10 px-5">
+              <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-white/10 px-4">
                 <div onClick={() => setOpen(false)}>
                   <Logo />
                 </div>
@@ -139,7 +139,7 @@ export function Navbar() {
                   <X />
                 </button>
               </div>
-              <nav aria-label="Mobile" className="flex-1 overflow-y-auto p-4">
+              <nav aria-label="Mobile" className="flex-1 overflow-y-auto p-3">
                 <ul className="flex flex-col gap-1">
                   {NAV_LINKS.map((link) => {
                     const active = isActive(link.href);
@@ -163,7 +163,7 @@ export function Navbar() {
                   })}
                 </ul>
               </nav>
-              <div className="shrink-0 border-t border-white/10 p-4">
+              <div className="shrink-0 border-t border-white/10 p-3">
                 <button
                   type="button"
                   onClick={() => {

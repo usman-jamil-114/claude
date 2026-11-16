@@ -132,7 +132,7 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.9 }}
-          className="mt-12 inline-flex items-center gap-3 rounded-2xl border border-promo/40 bg-promo/10 px-5 py-3 text-xs sm:text-sm"
+          className="mt-12 inline-flex items-center gap-3 rounded-2xl border border-promo/40 bg-promo/10 px-3 py-3 text-xs sm:px-5 sm:text-sm"
         >
           <span className="relative flex size-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-promo opacity-75" />
