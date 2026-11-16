@@ -80,7 +80,10 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mt-6 min-h-[1.3em] font-display text-2xl font-bold text-foreground md:text-4xl"
         >
-          We build <Typewriter />
+          <span className="block sm:inline">We build</span>{" "}
+          <span className="block sm:inline">
+            <Typewriter />
+          </span>
         </motion.p>
 
         <motion.p

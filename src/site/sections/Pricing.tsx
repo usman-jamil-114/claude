@@ -6,7 +6,6 @@ import { OFFER, PLAN_GROUPS, discountedPrice, formatPKR, type Plan, type PlanGro
 import { cn } from "../lib/cn";
 import { openWhatsApp, planMessage } from "../lib/whatsapp";
 import { buttonVariants } from "../components/Button";
-import { Countdown } from "./Countdown";
 
 function PlanCard({ plan, group, index }: { plan: Plan; group: PlanGroup; index: number }) {
   const price = discountedPrice(plan.original);
@@ -147,10 +146,6 @@ export function Pricing({ initial = "web" }: { initial?: PlanGroup["id"] }) {
           </motion.div>
         </AnimatePresence>
 
-        <div className="mt-14 flex flex-col items-center justify-center gap-4 rounded-3xl border border-promo/30 bg-promo/10 p-6 text-center md:flex-row md:gap-8 md:text-left">
-          <p className="font-display text-lg font-extrabold text-foreground">Launch prices end in</p>
-          <Countdown compact />
-        </div>
         <p className="mt-6 text-center text-xs text-muted-foreground">
           Prices in Pakistani Rupees (PKR). {PLAN_GROUPS[1]?.note} Need something custom? Message us for a tailored quote.
         </p>
